@@ -1,0 +1,41 @@
+{
+  "circular_id": "GZ-KYC-2020-01",
+  "title": "Video-based Customer Identification Process (V-CIP) and Non-face-to-face Onboarding",
+  "issue_date": "2020-07-10",
+  "effective_date": "2020-08-01",
+  "amends": [],
+  "paragraphs": [
+    {
+      "para": "1",
+      "text": "Reference is invited to circular GZ-KYC-2019-01 dated April 15, 2019 on Customer Due Diligence. Banks are now permitted to undertake a Video-based Customer Identification Process (V-CIP), being a consent-based live audio-visual interaction with the customer by an authorised official, as an alternative to in-person identification, subject to the conditions in this circular."
+    },
+    {
+      "para": "2",
+      "text": "Eligibility for V-CIP: the Video-based Customer Identification Process may be used for onboarding new individual customers, proprietors of proprietorship firms and authorised signatories of legal entities, and for periodic updation of KYC of existing individual customers. V-CIP shall be conducted only by trained officials of the bank and not by outsourced agents."
+    },
+    {
+      "para": "3",
+      "text": "Consent for V-CIP: the explicit consent of the customer shall be obtained and recorded before the Video-based Customer Identification Process begins, and the customer shall be informed that the entire interaction will be video-recorded and stored by the bank."
+    },
+    {
+      "para": "4",
+      "text": "Live location for V-CIP: the bank shall capture the live geo-coordinates of the customer during the Video-based Customer Identification Process and shall ensure that the customer is physically present in India at the time of the interaction. The V-CIP session shall be terminated if location capture fails."
+    },
+    {
+      "para": "5",
+      "text": "Liveness check for V-CIP: the bank shall perform a liveness check during the Video-based Customer Identification Process to guard against spoofing, pre-recorded video or deepfakes, and the official shall ask randomised questions and capture a live photograph of the customer for matching with the identity document."
+    },
+    {
+      "para": "6",
+      "text": "V-CIP for Politically Exposed Persons: the Video-based Customer Identification Process may be used for onboarding a Politically Exposed Person only with the prior approval of senior management, and an account of a Politically Exposed Person opened through V-CIP shall not receive aggregate credits exceeding Rs 10 lakh in a financial year until in-person verification is completed."
+    },
+    {
+      "para": "7",
+      "text": "Recording retention for V-CIP: the video recording, the live photograph and the audit trail of every Video-based Customer Identification Process session shall be stored securely within India with date and time stamp, and shall be retained for the period applicable to identification records."
+    },
+    {
+      "para": "8",
+      "text": "Non-face-to-face onboarding: where a customer is onboarded through a non-face-to-face mode other than V-CIP, the first payment into the account shall be made from a KYC-compliant account of the customer with another bank, and the account shall be classified as high risk until in-person or V-CIP verification is completed. These provisions are effective from August 1, 2020."
+    }
+  ]
+}
