@@ -29,6 +29,8 @@
 5. "Test this: POST /feedback …" (a live HTTP test of the spec bullet).
 6. "Generate 5 evaluation datasets … DO NOT provide it context related to the code or the
    requirements" (a blind, held-out evaluation).
+7. "Implement [a cross-encoder reranker], since citations are important", then "run it against
+   the 5 evaluation datasets and show me the numbers".
 
 ## Where the AI was wrong and how it was caught
 
@@ -45,6 +47,9 @@
 | 9 | `.env.example` advertised an OpenAI provider that does not exist, and README said `cp .env.example .env` although nothing loads `.env` | Auditor | Removed the claim; documented env-only configuration |
 | 10 | Created `config_new.py` / `text_new.py` side files instead of editing in place; a `git add --renormalize` folded unrelated files into one commit | My review of the file tree and `git show --stat` | Moved files into place; re-split the unpushed commits |
 | 11 | The corpus agent could not express "V-CIP for PEPs prohibited → allowed" as a numbers-only near-duplicate | Its own validation report | Amendment changed to a credit-cap change; recorded as a judgement call |
+| 12 | The groundedness judge pooled tokens across all cited quotes, so a sentence stitched from two citations passed | Re-reading the spec wording ("overlap with *a* cited quote") | Per-quote check; test with a stitched sentence |
+| 13 | I first argued against a cross-encoder for lack of time; once built, it improved Recall@5 (0.95 → 0.98) and citation precision (0.59 → 0.62) but **lowered** as-of accuracy (0.82 → 0.73) | Measured on the labelled set and the blind sets | Kept optional and off by default; trade-off documented |
+| 14 | My own threshold probe overstated robustness. The held-out blind sets showed plausible-but-uncovered KYC questions being answered with irrelevant citations | Blind datasets written by an agent with no code or spec context | Documented as the main limitation; not tuned against the blind set |
 
 ## Verification performed in the session
 

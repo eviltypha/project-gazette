@@ -43,6 +43,7 @@ class ItemResult:
     bm25: tuple[str, ...]
     vector: tuple[str, ...]
     hybrid: tuple[str, ...]
+    reranked: tuple[str, ...]
     refused: bool
     cited: tuple[str, ...]
     not_in_force_cited: tuple[str, ...]
@@ -69,7 +70,8 @@ class EvaluateSystem:
             top_similarity=retrieval.top_similarity,
             bm25=tuple(h.chunk_id for h in retrieval.keyword[:RECALL_K]),
             vector=tuple(h.chunk_id for h in retrieval.vector[:RECALL_K]),
-            hybrid=tuple(h.chunk_id for h in retrieval.hits[:RECALL_K]),
+            hybrid=tuple(h.chunk_id for h in retrieval.fused[:RECALL_K]),
+            reranked=tuple(h.chunk_id for h in retrieval.hits[:RECALL_K]),
             refused=refused,
             cited=cited,
             not_in_force_cited=tuple(c for c in cited if not self._calendar.is_in_force(c, as_of)),
@@ -83,6 +85,7 @@ class EvaluateSystem:
         as_of_items = [r for r in results if r.explicit_as_of]
         citations = [(r, c) for r in results for c in r.cited]
         grounded = [r.groundedness for r in results if r.groundedness is not None]
+        retrievers = ("bm25", "vector", "hybrid") + (("reranked",) if self._ask.reranker else ())
         return {
             "counts": {
                 "items": len(results),
@@ -92,7 +95,7 @@ class EvaluateSystem:
             },
             "recall_at_5": {
                 name: _round(_mean(_recall(getattr(r, name), r.gold) for r in answerable))
-                for name in ("bm25", "vector", "hybrid")
+                for name in retrievers
             },
             "citation_precision": _round(_mean(c in r.gold for r, c in citations)),
             "refusal_recall": _round(_mean(r.refused for r in refusable)),

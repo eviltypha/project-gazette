@@ -13,9 +13,10 @@ from __future__ import annotations
 
 import uuid
 from collections.abc import Mapping
+from dataclasses import replace
 from datetime import date
 
-from gazette.application.ports import Judge, LLMProvider
+from gazette.application.ports import Judge, LLMProvider, Reranker
 from gazette.application.retrieval import HybridRetriever, Retrieval
 from gazette.domain.citations import validate_citations
 from gazette.domain.models import Answer, AnswerStatus, Paragraph
@@ -36,6 +37,7 @@ class AskQuestion:
         paragraphs: Mapping[str, Paragraph],
         top_k: int,
         min_similarity: float,
+        reranker: Reranker | None = None,
     ) -> None:
         self._retriever = retriever
         self._provider = provider
@@ -44,14 +46,26 @@ class AskQuestion:
         self._paragraphs = paragraphs
         self._top_k = top_k
         self._min_similarity = min_similarity
+        self._reranker = reranker
 
     @property
     def provider(self) -> LLMProvider:
         return self._provider
 
+    @property
+    def reranker(self) -> Reranker | None:
+        return self._reranker
+
     def retrieve(self, question: str, as_of: date) -> Retrieval:
+        """In-force hybrid retrieval; with a reranker, the fused pool is re-scored and
+        the reranker's top-k replaces the RRF top-k."""
         allowed = self._calendar.in_force_ids(as_of)
-        return self._retriever.retrieve(question, self._top_k, allowed)
+        retrieval = self._retriever.retrieve(question, self._top_k, allowed)
+        if self._reranker is None or not retrieval.fused:
+            return retrieval
+        pool = [self._paragraphs[h.chunk_id] for h in retrieval.fused]
+        reranked = self._reranker.rerank(question, pool)
+        return replace(retrieval, hits=tuple(reranked[: self._top_k]))
 
     def __call__(self, question: str, as_of: date) -> Answer:
         query_id = uuid.uuid4().hex

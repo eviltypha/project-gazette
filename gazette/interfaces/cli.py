@@ -84,6 +84,8 @@ def format_report(report: dict) -> str:
         f"| BM25 only | {recall['bm25']:.4f} |",
         f"| Vector only | {recall['vector']:.4f} |",
         f"| Hybrid (RRF) | {recall['hybrid']:.4f} |",
+        *([f"| Hybrid + cross-encoder rerank | {recall['reranked']:.4f} |"]
+          if "reranked" in recall else []),
         "",
         "| Metric | Value |",
         "|---|---|",

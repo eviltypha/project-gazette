@@ -193,6 +193,7 @@
     "prompt_version": "extractive-v3",
     "embedder": "hashed",
     "top_k": 5,
-    "min_similarity": 0.2319
+    "min_similarity": 0.2319,
+    "reranker": "none"
   }
 }

@@ -34,6 +34,7 @@ class Retrieval:
     hits: tuple[ScoredChunk, ...]
     keyword: tuple[ScoredChunk, ...]
     vector: tuple[ScoredChunk, ...]
+    fused: tuple[ScoredChunk, ...]
 
     @property
     def top_similarity(self) -> float:
@@ -60,4 +61,4 @@ class HybridRetriever:
         keyword_hits = self.keyword.search(query, self._candidates, allowed_ids)
         vector_hits = self.vector.search(query, self._candidates, allowed_ids)
         fused = reciprocal_rank_fusion([keyword_hits, vector_hits], self._rrf_k)
-        return Retrieval(tuple(fused[:k]), tuple(keyword_hits), tuple(vector_hits))
+        return Retrieval(tuple(fused[:k]), tuple(keyword_hits), tuple(vector_hits), tuple(fused))
