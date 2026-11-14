@@ -1,6 +1,7 @@
 """End-to-end tests over the committed corpus; each run builds its own index in tmp_path."""
 
 from collections import Counter
+from dataclasses import replace
 from datetime import date
 
 import pytest
@@ -48,12 +49,38 @@ def test_known_question_is_answered_with_expected_citation(client):
     assert set(cited) <= set(body["retrieved"])
 
 
-def test_off_topic_question_is_refused(client):
-    response = client.post(
-        "/ask", json={"question": "What is the current interest rate on home loans?"}
-    )
+OFF_TOPIC_QUESTIONS = [
+    "What is the current interest rate on home loans?",
+    "What is the repo rate set by the central bank?",
+    "How do I reset my net banking password?",
+    "What is the minimum balance for a savings account?",
+    "How do I open a demat account?",
+    "What documents are needed for a car loan?",
+    "Can I get a personal loan without a salary slip?",
+    "What is the GST rate on bank charges?",
+    "Who won the cricket match yesterday?",
+]
 
-    body = response.json()
+
+@pytest.fixture(scope="module")
+def module_client(tmp_path_factory):
+    tmp = tmp_path_factory.mktemp("gazette")
+    settings = replace(
+        Settings.from_env(),
+        corpus_dir=CORPUS_DIR,
+        index_dir=tmp / "index",
+        db_path=tmp / "gazette.sqlite3",
+        llm_provider="fake",
+    )
+    run_ingest(settings)
+    with TestClient(create_app(lambda: settings)) as test_client:
+        yield test_client
+
+
+@pytest.mark.parametrize("question", OFF_TOPIC_QUESTIONS)
+def test_off_topic_question_is_refused(module_client, question):
+    body = module_client.post("/ask", json={"question": question}).json()
+
     assert body["status"] == "refused"
     assert body["citations"] == []
     assert body["refusal_reason"]
