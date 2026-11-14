@@ -6,10 +6,35 @@ not support an answer.
 
 > Work in progress — sections below are filled in as each task lands.
 
-## Layout
+## Architecture
+
+The package follows Clean Architecture; dependencies point inwards only, and
+`tests/test_architecture.py` fails the build if a layer imports an outer one.
 
 ```
-gazette/          Python package (ingest, retrieval, pipeline, API, eval, feedback)
+ interfaces (FastAPI, CLIs) ──┐
+                              ├──► application (use cases + ports) ──► domain (entities, rules)
+ infrastructure (adapters) ───┘
+            ▲
+ container.py (composition root wires adapters into use cases)
+```
+
+| Layer | Package | Contents |
+|---|---|---|
+| Domain | `gazette/domain` | Entities (`Circular`, `Paragraph`, `Citation`, `Answer`, `Feedback`, `AuditRecord`) and pure rules such as `ValidityCalendar` (as-of-date supersession). No I/O, no frameworks. |
+| Application | `gazette/application` | Use cases (ingest, ask, eval, feedback export/approve) and the ports they need: `Embedder`, `SearchIndex`, `LLMProvider`, `Judge`, `AuditRepository`, `FeedbackRepository`, `EvalSetRepository`, `CorpusSource`. |
+| Infrastructure | `gazette/infrastructure` | Adapters: JSON corpus loader, BM25 index, hashed n-gram embedder + NumPy vector store, `FakeProvider` / optional OpenAI provider, SQLite repositories, JSONL eval store. |
+| Interfaces | `gazette/interfaces` | FastAPI routes and CLI argument parsing. Translate payloads to use-case calls; no business logic. |
+| Composition | `gazette/container.py` | Builds concrete adapters from `Settings` and injects them. |
+
+The spec's entry points (`python -m gazette.ingest`, `gazette.api:app`,
+`python -m gazette.eval`, `python -m gazette.feedback`) are thin modules that delegate to
+`gazette/interfaces`.
+
+## Repository layout
+
+```
+gazette/          Python package (layers above)
 data/circulars/   Synthetic circular corpus (committed)
 eval/             Labelled eval set and generated report
 tests/            Offline pytest suite (builds its own index in a temp dir)
