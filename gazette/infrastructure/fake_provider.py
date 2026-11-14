@@ -1,11 +1,13 @@
 """Deterministic extractive provider used by tests and the default eval.
 
-For each context paragraph (in retrieval order) it picks the sentence sharing the
-most terms with the question. It always cites the top paragraph and adds the next
-ones only when they match the question at least as well, to keep precision high."""
+Each retrieved paragraph's best sentence is scored by the number of question terms
+it shares, with a small bonus for stating a concrete figure (amount, period, count)
+since officers' questions usually ask for one. The best-scoring sentence is cited,
+plus a runner-up only if it scores as well, to keep citation precision high."""
 
 from __future__ import annotations
 
+import re
 from collections.abc import Sequence
 
 from gazette.application.ports import Draft
@@ -13,32 +15,36 @@ from gazette.domain.models import Citation, Paragraph
 from gazette.infrastructure.text import split_sentences, tokenize
 
 MAX_CITATIONS = 2
+_FIGURE_BONUS = 0.5
+_FIGURE = re.compile(r"(?i)\bRs\.?\s*\d|\b\d+\s*(?:per\s*cent|%|lakh|crore|working days?|days?|months?|years?)\b")
 
 
 class FakeProvider:
     name = "fake-extractive"
-    prompt_version = "extractive-v1"
+    prompt_version = "extractive-v2"
 
     def generate(self, question: str, context: Sequence[Paragraph]) -> Draft:
         terms = set(tokenize(question))
-        picks: list[tuple[Paragraph, str, int]] = []
-        for paragraph in context:
-            sentence, overlap = _best_sentence(paragraph.text, terms)
-            if overlap == 0 or (picks and overlap < picks[0][2]):
-                continue
-            picks.append((paragraph, sentence, overlap))
-            if len(picks) == MAX_CITATIONS:
-                break
+        candidates = []
+        for rank, paragraph in enumerate(context):
+            sentence, score = _best_sentence(paragraph.text, terms)
+            if score > 0:
+                candidates.append((-score, rank, paragraph, sentence))
+        candidates.sort(key=lambda c: (c[0], c[1]))
+        picks = [c for c in candidates if c[0] == candidates[0][0]][:MAX_CITATIONS]
         return Draft(
-            answer=" ".join(sentence for _, sentence, _ in picks),
-            citations=tuple(Citation(p.circular_id, p.para, s) for p, s, _ in picks),
+            answer=" ".join(sentence for *_, sentence in picks),
+            citations=tuple(Citation(p.circular_id, p.para, s) for _, _, p, s in picks),
         )
 
 
-def _best_sentence(text: str, terms: set[str]) -> tuple[str, int]:
-    best, best_overlap = "", 0
+def _best_sentence(text: str, terms: set[str]) -> tuple[str, float]:
+    best, best_score = "", 0.0
     for sentence in split_sentences(text):
         overlap = len(terms & set(tokenize(sentence)))
-        if overlap > best_overlap:
-            best, best_overlap = sentence, overlap
-    return best, best_overlap
+        if overlap == 0:
+            continue
+        score = overlap + (_FIGURE_BONUS if _FIGURE.search(sentence) else 0.0)
+        if score > best_score:
+            best, best_score = sentence, score
+    return best, best_score
