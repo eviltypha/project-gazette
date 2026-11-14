@@ -4,11 +4,37 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from collections.abc import Sequence
 from pathlib import Path
 
+from gazette.application.feedback import CandidateNotFoundError
 from gazette.config import Settings
-from gazette.container import run_evaluation, run_ingest
+from gazette.container import approve_candidate, export_candidates, run_evaluation, run_ingest
+
+
+def feedback_main(argv: Sequence[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(prog="python -m gazette.feedback",
+                                     description="Turn reviewer feedback into eval candidates")
+    parser.add_argument("--candidates", type=Path, default=Path("eval/candidates.jsonl"))
+    parser.add_argument("--questions", type=Path, default=Path("eval/questions.jsonl"))
+    commands = parser.add_subparsers(dest="command", required=True)
+    commands.add_parser("export", help="write non-correct feedback to the candidates file")
+    approve = commands.add_parser("approve", help="move one candidate into the eval set")
+    approve.add_argument("candidate_id")
+    args = parser.parse_args(argv)
+
+    if args.command == "export":
+        items = export_candidates(Settings.from_env(), args.candidates)
+        print(f"Exported {len(items)} candidate(s) to {args.candidates}")
+        return 0
+    try:
+        item = approve_candidate(args.candidates, args.questions, args.candidate_id)
+    except (CandidateNotFoundError, ValueError) as exc:
+        print(f"error: cannot approve {args.candidate_id}: {exc}", file=sys.stderr)
+        return 1
+    print(f"Approved {item.id} into {args.questions}")
+    return 0
 
 
 def ingest_main(argv: Sequence[str] | None = None) -> int:
