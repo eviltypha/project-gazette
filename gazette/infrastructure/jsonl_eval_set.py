@@ -19,11 +19,18 @@ def item_to_dict(item: EvalItem) -> dict:
 
 
 def item_from_dict(raw: dict) -> EvalItem:
+    gold, should_refuse = raw.get("gold"), raw.get("should_refuse")
+    if not isinstance(raw.get("id"), str) or not isinstance(raw.get("question"), str):
+        raise ValueError(f"eval item needs string id and question: {raw!r}")
+    if not isinstance(gold, list) or not all(isinstance(g, str) for g in gold):
+        raise ValueError(f"eval item {raw['id']}: gold must be a list of chunk ids")
+    if not isinstance(should_refuse, bool):
+        raise ValueError(f"eval item {raw['id']}: should_refuse must be a boolean")
     return EvalItem(
-        id=str(raw["id"]),
-        question=str(raw["question"]),
-        gold=tuple(raw.get("gold", [])),
-        should_refuse=bool(raw["should_refuse"]),
+        id=raw["id"],
+        question=raw["question"],
+        gold=tuple(gold),
+        should_refuse=should_refuse,
         as_of=date.fromisoformat(raw["as_of"]) if raw.get("as_of") else None,
     )
 
