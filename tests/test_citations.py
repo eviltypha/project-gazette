@@ -6,6 +6,7 @@ from gazette.application.retrieval import HybridRetriever
 from gazette.domain.citations import validate_citations
 from gazette.domain.models import Amendment, AnswerStatus, Circular, Citation, Paragraph
 from gazette.domain.validity import ValidityCalendar
+from gazette.infrastructure.overlap_judge import OverlapJudge
 from tests.helpers import StubIndex
 
 P1 = Paragraph("GZ-A", "1", "Cash Transaction Reports shall be filed by the 15th of the next month.")
@@ -69,6 +70,7 @@ def test_pipeline_refuses_when_provider_citations_fail_validation():
     ask = AskQuestion(
         retriever=HybridRetriever(StubIndex(["GZ-A#1"]), StubIndex(["GZ-A#1"])),
         provider=LyingProvider(),
+        judge=OverlapJudge(),
         calendar=ValidityCalendar([circular]),
         paragraphs=PARAS,
         top_k=5,
@@ -105,6 +107,7 @@ def test_pipeline_drops_citation_of_superseded_paragraph():
     ask = AskQuestion(
         retriever=HybridRetriever(StubIndex(["GZ-OLD#1", "GZ-NEW#1"]), StubIndex(["GZ-OLD#1"])),
         provider=CitesEverythingProvider(),
+        judge=OverlapJudge(),
         calendar=calendar,
         paragraphs={p.chunk_id: p for p in (OLD, NEW)},
         top_k=5,
@@ -116,3 +119,33 @@ def test_pipeline_drops_citation_of_superseded_paragraph():
     assert answer.status is AnswerStatus.ANSWERED
     assert [c.chunk_id for c in answer.citations] == ["GZ-NEW#1"]
     assert "GZ-OLD#1" not in [h.chunk_id for h in answer.retrieved]
+
+
+class SmuggledClaimProvider:
+    """Pairs a genuine quote with an unsupported extra claim."""
+
+    name, prompt_version = "smuggler", "test"
+
+    def generate(self, question, context):
+        quote = "Cash Transaction Reports shall be filed by the 15th of the next month."
+        return Draft(f"{quote} Branches may waive reporting for VIP customers.",
+                     (Citation("GZ-A", "1", quote),))
+
+
+def test_pipeline_strips_unsupported_claims_riding_on_a_valid_citation():
+    circular = Circular("GZ-A", "t", date(2020, 1, 1), date(2020, 1, 1), (P1, P2))
+    ask = AskQuestion(
+        retriever=HybridRetriever(StubIndex(["GZ-A#1"]), StubIndex(["GZ-A#1"])),
+        provider=SmuggledClaimProvider(),
+        judge=OverlapJudge(),
+        calendar=ValidityCalendar([circular]),
+        paragraphs=PARAS,
+        top_k=5,
+        min_similarity=0.0,
+    )
+
+    answer = ask("When is the CTR due?", date(2024, 1, 1))
+
+    assert answer.status is AnswerStatus.ANSWERED
+    assert answer.answer == P1.text
+    assert "VIP" not in answer.answer

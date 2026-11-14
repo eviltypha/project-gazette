@@ -74,6 +74,7 @@ def build_services(settings: Settings) -> Services:
     ask = AskQuestion(
         retriever=HybridRetriever(keyword, vector),
         provider=make_provider(settings),
+        judge=OverlapJudge(),
         calendar=calendar,
         paragraphs={p.chunk_id: p for p in all_paragraphs(circulars)},
         top_k=settings.top_k,
