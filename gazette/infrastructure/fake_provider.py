@@ -2,8 +2,10 @@
 
 Each retrieved paragraph's best sentence is scored by the number of question terms
 it shares, with a small bonus for stating a concrete figure (amount, period, count)
-since officers' questions usually ask for one. The best-scoring sentence is cited,
-plus a runner-up only if it scores as well, to keep citation precision high."""
+since officers' questions usually ask for one, and a small penalty for naming a
+calendar month, which marks one-off transition provisions rather than the standing
+rule. The best-scoring sentence is cited, plus a runner-up only if it scores as
+well, to keep citation precision high."""
 
 from __future__ import annotations
 
@@ -16,12 +18,16 @@ from gazette.infrastructure.text import split_sentences, tokenize
 
 MAX_CITATIONS = 2
 _FIGURE_BONUS = 0.5
+_CALENDAR_PENALTY = 0.75
 _FIGURE = re.compile(r"(?i)\bRs\.?\s*\d|\b\d+\s*(?:per\s*cent|%|lakh|crore|working days?|days?|months?|years?)\b")
+_CALENDAR = re.compile(
+    r"\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\b"
+)
 
 
 class FakeProvider:
     name = "fake-extractive"
-    prompt_version = "extractive-v2"
+    prompt_version = "extractive-v3"
 
     def generate(self, question: str, context: Sequence[Paragraph]) -> Draft:
         terms = set(tokenize(question))
@@ -45,6 +51,8 @@ def _best_sentence(text: str, terms: set[str]) -> tuple[str, float]:
         if overlap == 0:
             continue
         score = overlap + (_FIGURE_BONUS if _FIGURE.search(sentence) else 0.0)
+        if _CALENDAR.search(sentence):
+            score -= _CALENDAR_PENALTY
         if score > best_score:
             best, best_score = sentence, score
     return best, best_score
