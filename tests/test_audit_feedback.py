@@ -47,11 +47,18 @@ def test_audit_record_for_answered_query_has_citations(client):
 
 
 def test_unknown_query_id_returns_404(client):
-    unknown = "0" * 32
-    assert client.get(f"/audit/{unknown}").status_code == 404
-    response = client.post("/feedback", json={"query_id": unknown, "verdict": "correct",
-                                              "reviewer": "officer-1"})
-    assert response.status_code == 404
+    for unknown in ("0" * 32, "does-not-exist"):
+        assert client.get(f"/audit/{unknown}").status_code == 404
+        response = client.post("/feedback", json={"query_id": unknown, "verdict": "correct",
+                                                  "reviewer": "officer-1"})
+        assert response.status_code == 404
+
+
+def test_feedback_rejects_correction_citing_paragraph_not_in_corpus(client):
+    query_id = client.post("/ask", json={"question": "What is the CTR threshold?"}).json()["query_id"]
+    payload = {"query_id": query_id, "verdict": "wrong_citation", "reviewer": "r",
+               "correct_citations": ["GZ-AML-2099-01#1"]}
+    assert client.post("/feedback", json=payload).status_code == 422
 
 
 def test_feedback_rejects_unknown_verdict_and_malformed_citation(client):

@@ -4,6 +4,8 @@ Nothing reaches eval/questions.jsonl without an explicit ``approve`` of one cand
 
 from __future__ import annotations
 
+from collections.abc import Collection
+
 from gazette.application.ports import AuditRepository, EvalSetRepository, FeedbackRepository
 from gazette.domain.models import AuditRecord, EvalItem, Feedback, Verdict
 
@@ -12,18 +14,31 @@ class UnknownQueryError(LookupError):
     pass
 
 
+class UnknownCitationError(ValueError):
+    pass
+
+
 class CandidateNotFoundError(LookupError):
     pass
 
 
 class SubmitFeedback:
-    def __init__(self, audit: AuditRepository, feedback: FeedbackRepository) -> None:
+    def __init__(
+        self,
+        audit: AuditRepository,
+        feedback: FeedbackRepository,
+        known_chunk_ids: Collection[str],
+    ) -> None:
         self._audit = audit
         self._feedback = feedback
+        self._known_chunk_ids = known_chunk_ids
 
     def __call__(self, feedback: Feedback) -> int:
         if self._audit.get(feedback.query_id) is None:
             raise UnknownQueryError(feedback.query_id)
+        unknown = [c for c in feedback.correct_citations if c not in self._known_chunk_ids]
+        if unknown:
+            raise UnknownCitationError(", ".join(unknown))
         return self._feedback.add(feedback)
 
 

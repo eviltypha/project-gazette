@@ -71,12 +71,13 @@ def build_services(settings: Settings) -> Services:
     vector.load(settings.index_dir)
 
     calendar = ValidityCalendar(circulars)
+    paragraphs = {p.chunk_id: p for p in all_paragraphs(circulars)}
     ask = AskQuestion(
         retriever=HybridRetriever(keyword, vector),
         provider=make_provider(settings),
         judge=OverlapJudge(),
         calendar=calendar,
-        paragraphs={p.chunk_id: p for p in all_paragraphs(circulars)},
+        paragraphs=paragraphs,
         top_k=settings.top_k,
         min_similarity=settings.min_similarity,
     )
@@ -88,7 +89,9 @@ def build_services(settings: Settings) -> Services:
         ask=ask,
         audited_ask=AuditedAsk(ask, audit),
         audit=audit,
-        submit_feedback=SubmitFeedback(audit, SqliteFeedbackRepository(settings.db_path)),
+        submit_feedback=SubmitFeedback(
+            audit, SqliteFeedbackRepository(settings.db_path), frozenset(paragraphs)
+        ),
     )
 
 

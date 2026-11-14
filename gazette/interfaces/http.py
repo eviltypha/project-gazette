@@ -8,7 +8,7 @@ from typing import Annotated, Literal
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, StringConstraints
 
-from gazette.application.feedback import UnknownQueryError
+from gazette.application.feedback import UnknownCitationError, UnknownQueryError
 from gazette.config import Settings
 from gazette.container import Services, build_services
 from gazette.domain.models import Answer, AuditRecord, Feedback, Verdict
@@ -96,7 +96,7 @@ class AuditResponse(BaseModel):
 
 class FeedbackRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    query_id: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{32}$")]
+    query_id: Annotated[str, StringConstraints(min_length=1, max_length=64)]
     verdict: Verdict
     correct_citations: list[ChunkId] = Field(default_factory=list, max_length=10)
     reviewer: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=100)]
@@ -147,6 +147,9 @@ def create_app(settings_factory: Callable[[], Settings] = Settings.from_env) -> 
             )
         except UnknownQueryError:
             raise HTTPException(status.HTTP_404_NOT_FOUND, f"unknown query_id {body.query_id!r}")
+        except UnknownCitationError as exc:
+            raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY,
+                                f"correct_citations not in corpus: {exc}")
         return FeedbackResponse(feedback_id=feedback_id, query_id=body.query_id)
 
     return app
