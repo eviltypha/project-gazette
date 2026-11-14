@@ -66,6 +66,16 @@ class Draft:
     citations: tuple[Citation, ...]
 
 
+class Reranker(Protocol):
+    """Re-scores a candidate pool by reading question and paragraph together."""
+
+    name: str
+
+    def rerank(self, query: str, paragraphs: Sequence[Paragraph]) -> list[ScoredChunk]:
+        """Return all candidates ordered best-first with the reranker's scores."""
+        ...
+
+
 class LLMProvider(Protocol):
     name: str
     prompt_version: str
