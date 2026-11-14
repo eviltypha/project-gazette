@@ -184,6 +184,30 @@ shows it.
 - **The margin is thin.** The threshold sits 0.004 from the nearest observation, so unseen
   phrasing can land on either side.
 
+### Held-out blind check (not used for tuning)
+
+A separate sub-agent, given only the domain ("Indian bank KYC/AML compliance questions, plus
+off-topic ones") and no access to the code, corpus or spec, wrote 5 datasets of 20 questions
+each (59 in-domain, 41 off-topic). They were run at `as_of` 2026-11-14 and deliberately not
+used to tune anything. They are not committed, because they have no gold labels.
+
+| Mode | Off-topic refused | In-domain answered |
+|---|---|---|
+| Hybrid (RRF) | 41 / 41 (100%) | 37 / 59 (63%) |
+| Hybrid + cross-encoder rerank | 41 / 41 (100%) | 37 / 59 (63%) |
+
+- **Off-topic refusal held up** on unseen phrasing.
+- **Main weakness:** about 5 plausible in-domain questions the corpus does not cover (CKYCR,
+  NPO transaction reports, PMLA §13 penalties, e-Aadhaar, minors) scored 0.24–0.29, just above
+  the threshold. They were answered with verbatim but irrelevant citations. Citation
+  validation proves a quote is real, not that it answers the question. A semantic relevance
+  check, such as the cross-encoder score used as a second gate, is the fix.
+- **Two covered topics were falsely refused**: tipping-off (0.213) and trust beneficial owners
+  (0.209).
+- **The reranker changed citations on 10 of 100 questions**: 4 better (including the STR
+  deadline, now citing the in-force 5-day rule instead of the Principal Officer paragraph), 6
+  neutral and 0 worse.
+
 ## Feedback loop
 
 - An officer reviews any answer with `POST /feedback`, giving a verdict, an optional
