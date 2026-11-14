@@ -19,6 +19,13 @@ def test_judge_penalises_unsupported_sentence():
     assert OverlapJudge().groundedness(answer, [QUOTE]) == 0.5
 
 
+def test_judge_requires_support_from_a_single_quote_not_stitched_fragments():
+    a = Citation("GZ-A", "1", "Cash deposits are reported monthly to the unit.")
+    b = Citation("GZ-B", "1", "Senior approval is obtained before onboarding.")
+    stitched = "Cash deposits need senior approval."
+    assert OverlapJudge().groundedness(stitched, [a, b]) == 0.0
+
+
 def test_threshold_sweep_picks_widest_gap_that_separates_classes():
     sweep = sweep_threshold(answerable=[0.30, 0.45, 0.60], refusable=[0.05, 0.10, 0.18])
     assert sweep["selected"] == pytest.approx(0.24)

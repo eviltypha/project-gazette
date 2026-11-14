@@ -2,7 +2,6 @@
 
 from collections import Counter
 from dataclasses import replace
-from datetime import date
 
 import pytest
 from fastapi.testclient import TestClient
@@ -11,7 +10,7 @@ from gazette.config import Settings
 from gazette.container import run_ingest
 from gazette.domain.corpus import all_paragraphs
 from gazette.infrastructure.json_corpus import JsonCorpusSource
-from gazette.interfaces.http import create_app
+from gazette.interfaces.http import create_app, today_ist
 from tests.conftest import CORPUS_DIR
 
 
@@ -117,8 +116,10 @@ def test_every_returned_citation_is_retrieved_and_verbatim(module_client):
 def test_invalid_payload_is_rejected(client):
     assert client.post("/ask", json={"question": ""}).status_code == 422
     assert client.post("/ask", json={"question": "ok?", "as_of": "not-a-date"}).status_code == 422
+    assert client.post("/ask", json={"question": "CTR threshold?", "as_of": 0}).status_code == 422
+    assert client.post("/ask", json={"question": "CTR threshold?", "extra": 1}).status_code == 422
 
 
-def test_default_as_of_is_today(client):
+def test_default_as_of_is_today_in_ist(client):
     body = client.post("/ask", json={"question": "What is the CTR threshold?"}).json()
-    assert body["as_of"] == date.today().isoformat()
+    assert body["as_of"] == today_ist().isoformat()
