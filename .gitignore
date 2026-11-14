@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Secrets
+.env
+
+# Generated artefacts (rebuilt by `python -m gazette.ingest`)
+index/
+*.sqlite3
+*.db
+
+# Feedback candidates are reviewer-local until approved
+eval/candidates.jsonl
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
