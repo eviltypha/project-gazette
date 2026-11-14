@@ -1,7 +1,5 @@
 """FastAPI delivery layer. Validates payloads and maps them to use cases."""
 
-from __future__ import annotations
-
 from collections.abc import Callable
 from contextlib import asynccontextmanager
 from datetime import date
