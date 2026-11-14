@@ -1,0 +1,198 @@
+{
+  "counts": {
+    "items": 52,
+    "answerable": 42,
+    "should_refuse": 10,
+    "as_of": 11
+  },
+  "recall_at_5": {
+    "bm25": 0.9524,
+    "vector": 0.9286,
+    "hybrid": 0.9524
+  },
+  "citation_precision": 0.5918,
+  "refusal_recall": 0.8,
+  "false_refusal_rate": 0.1429,
+  "as_of_accuracy": 0.8182,
+  "superseded_citations": 0,
+  "groundedness": 1.0,
+  "threshold_sweep": {
+    "selected": 0.2319,
+    "refusal_recall": 0.8,
+    "false_refusal_rate": 0.1429,
+    "max_false_refusal_budget": 0.15,
+    "margin": 0.0041
+  },
+  "failures": [
+    {
+      "id": "q001",
+      "problem": "refused but answerable",
+      "gold": [
+        "GZ-KYC-2019-01#2"
+      ],
+      "cited": [],
+      "top_similarity": 0.1832
+    },
+    {
+      "id": "q004",
+      "problem": "no gold paragraph cited",
+      "gold": [
+        "GZ-KYC-2019-01#5"
+      ],
+      "cited": [
+        "GZ-KYC-2019-01#7",
+        "GZ-AML-2022-01#2"
+      ],
+      "top_similarity": 0.2528
+    },
+    {
+      "id": "q008",
+      "problem": "no gold paragraph cited",
+      "gold": [
+        "GZ-KYC-2020-01#2"
+      ],
+      "cited": [
+        "GZ-KYC-2023-02#3"
+      ],
+      "top_similarity": 0.3506
+    },
+    {
+      "id": "q009",
+      "problem": "no gold paragraph cited",
+      "gold": [
+        "GZ-KYC-2020-01#4"
+      ],
+      "cited": [
+        "GZ-KYC-2023-02#3"
+      ],
+      "top_similarity": 0.3678
+    },
+    {
+      "id": "q012",
+      "problem": "refused but answerable",
+      "gold": [
+        "GZ-KYC-2020-01#8"
+      ],
+      "cited": [],
+      "top_similarity": 0.1577
+    },
+    {
+      "id": "q013",
+      "problem": "no gold paragraph cited",
+      "gold": [
+        "GZ-AML-2020-02#3"
+      ],
+      "cited": [
+        "GZ-KYC-2023-02#3"
+      ],
+      "top_similarity": 0.3335
+    },
+    {
+      "id": "q014",
+      "problem": "refused but answerable",
+      "gold": [
+        "GZ-AML-2020-02#6"
+      ],
+      "cited": [],
+      "top_similarity": 0.1551
+    },
+    {
+      "id": "q017",
+      "problem": "no gold paragraph cited",
+      "gold": [
+        "GZ-KYC-2021-01#5"
+      ],
+      "cited": [
+        "GZ-AML-2022-01#2"
+      ],
+      "top_similarity": 0.3185
+    },
+    {
+      "id": "q022",
+      "problem": "refused but answerable",
+      "gold": [
+        "GZ-AML-2019-01#7"
+      ],
+      "cited": [],
+      "top_similarity": 0.1377
+    },
+    {
+      "id": "q025",
+      "problem": "refused but answerable",
+      "gold": [
+        "GZ-AML-2021-01#2"
+      ],
+      "cited": [],
+      "top_similarity": 0.2042
+    },
+    {
+      "id": "q027",
+      "problem": "no gold paragraph cited",
+      "gold": [
+        "GZ-AML-2022-01#4"
+      ],
+      "cited": [
+        "GZ-AML-2022-01#3"
+      ],
+      "top_similarity": 0.344
+    },
+    {
+      "id": "q028",
+      "problem": "no gold paragraph cited",
+      "gold": [
+        "GZ-AML-2022-02#3"
+      ],
+      "cited": [
+        "GZ-AML-2022-02#4",
+        "GZ-AML-2024-01#3"
+      ],
+      "top_similarity": 0.2975
+    },
+    {
+      "id": "a008",
+      "problem": "no gold paragraph cited",
+      "gold": [
+        "GZ-AML-2024-01#3"
+      ],
+      "cited": [
+        "GZ-AML-2024-01#6"
+      ],
+      "top_similarity": 0.3898
+    },
+    {
+      "id": "a010",
+      "problem": "refused but answerable",
+      "gold": [
+        "GZ-AML-2020-01#4"
+      ],
+      "cited": [],
+      "top_similarity": 0.2278
+    },
+    {
+      "id": "r003",
+      "problem": "answered but should refuse",
+      "gold": [],
+      "cited": [
+        "GZ-KYC-2019-01#2"
+      ],
+      "top_similarity": 0.2371
+    },
+    {
+      "id": "r008",
+      "problem": "answered but should refuse",
+      "gold": [],
+      "cited": [
+        "GZ-AML-2019-01#4",
+        "GZ-AML-2021-02#4"
+      ],
+      "top_similarity": 0.2908
+    }
+  ],
+  "config": {
+    "provider": "fake-extractive",
+    "prompt_version": "extractive-v3",
+    "embedder": "hashed",
+    "top_k": 5,
+    "min_similarity": 0.2319
+  }
+}
