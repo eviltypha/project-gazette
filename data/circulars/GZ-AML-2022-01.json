@@ -1,0 +1,33 @@
+{
+  "circular_id": "GZ-AML-2022-01",
+  "title": "Screening against Sanctions Lists and Freezing of Assets",
+  "issue_date": "2022-02-14",
+  "effective_date": "2022-03-15",
+  "amends": [],
+  "paragraphs": [
+    {
+      "para": "1",
+      "text": "Reference is invited to the obligations of banks to implement targeted financial sanctions. This circular prescribes the procedure for screening customers and transactions against the sanctions lists of the United Nations Security Council (UNSC) and for freezing the funds of designated individuals and entities."
+    },
+    {
+      "para": "2",
+      "text": "Sanctions screening at onboarding: every bank shall screen the name of each prospective customer, beneficial owner and authorised signatory against the UNSC sanctions lists and the domestic designated lists before opening an account, and no account shall be opened for a designated person."
+    },
+    {
+      "para": "3",
+      "text": "Sanctions screening of existing customers: whenever a UNSC sanctions list or a domestic designated list is updated, every bank shall screen its entire existing customer base against the updated list within 24 hours of the update being communicated."
+    },
+    {
+      "para": "4",
+      "text": "Freezing timeline for sanctioned persons: where a customer or beneficial owner matches a designated individual or entity, the bank shall freeze the funds, financial assets and accounts of that person without delay and in any case within 24 hours of detecting the match, without prior notice to the person."
+    },
+    {
+      "para": "5",
+      "text": "Reporting of sanctions matches: the bank shall report the details of every account frozen under the sanctions framework, including the balance held, to the designated nodal officer of the Government and to the Financial Intelligence Unit within 48 hours of freezing, and shall also file a Suspicious Transaction Report."
+    },
+    {
+      "para": "6",
+      "text": "Sanctions screening of transactions: cross-border wire transfers and remittances shall be screened in real time against the UNSC sanctions lists before execution. The sanctions screening and freezing provisions of circular GZ-AML-2022-01 shall be effective from March 15, 2022."
+    }
+  ]
+}

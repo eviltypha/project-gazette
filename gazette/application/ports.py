@@ -23,13 +23,25 @@ from gazette.domain.models import (
 class CorpusSource(Protocol):
     def load(self) -> list[Circular]: ...
 
+    def fingerprint(self) -> str:
+        """Stable hash of the corpus content; changes whenever any circular changes."""
+        ...
+
 
 class Embedder(Protocol):
     name: str
 
+    def fit(self, texts: Sequence[str]) -> None:
+        """Learn corpus statistics (no-op for pretrained models)."""
+        ...
+
     def embed(self, texts: Sequence[str]) -> np.ndarray:
         """Return an (n, d) matrix of L2-normalised vectors."""
         ...
+
+    def state(self) -> dict: ...
+
+    def load_state(self, state: dict) -> None: ...
 
 
 class SearchIndex(Protocol):

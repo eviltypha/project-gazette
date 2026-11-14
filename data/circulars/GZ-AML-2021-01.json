@@ -1,0 +1,33 @@
+{
+  "circular_id": "GZ-AML-2021-01",
+  "title": "Originator and Beneficiary Information in Wire Transfers",
+  "issue_date": "2021-05-12",
+  "effective_date": "2021-07-01",
+  "amends": [],
+  "paragraphs": [
+    {
+      "para": "1",
+      "text": "Reference is invited to the need to prevent the misuse of wire transfers for money laundering and terrorist financing. This circular specifies the originator and beneficiary information that must accompany domestic and cross-border wire transfers, and the obligations of ordering, intermediary and beneficiary banks."
+    },
+    {
+      "para": "2",
+      "text": "Wire transfer threshold for domestic transfers: every domestic wire transfer of Rs 50,000 and above shall be accompanied by full originator information, namely the name, account number and address of the originator; domestic wire transfers below Rs 50,000 shall carry at least the originator's name and account number."
+    },
+    {
+      "para": "3",
+      "text": "Wire transfer threshold for cross-border transfers: every cross-border wire transfer of Rs 1,00,000 and above shall be accompanied by full originator information, namely the name, account number and address of the originator; cross-border wire transfers below Rs 1,00,000 shall carry at least the originator's name and account number."
+    },
+    {
+      "para": "4",
+      "text": "Beneficiary information in wire transfers: every domestic and cross-border wire transfer shall include the name and account number of the beneficiary, or a unique transaction reference number where no account is used, so that the transfer can be traced."
+    },
+    {
+      "para": "5",
+      "text": "Intermediary banks in wire transfers: an intermediary bank shall ensure that all originator and beneficiary information accompanying a wire transfer is retained with the transfer and passed on to the next bank in the payment chain without alteration."
+    },
+    {
+      "para": "6",
+      "text": "Wire transfers lacking originator information: the beneficiary bank shall adopt risk-based procedures to decide whether to execute, reject or suspend a wire transfer lacking complete originator information, and repeated failures by an ordering bank shall be considered for a Suspicious Transaction Report. These provisions are effective from July 1, 2021."
+    }
+  ]
+}
