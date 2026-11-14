@@ -86,10 +86,12 @@ class AuditRepository(Protocol):
 
 
 class FeedbackRepository(Protocol):
-    def add(self, feedback: Feedback) -> None: ...
+    def add(self, feedback: Feedback) -> int:
+        """Persist feedback and return its id."""
+        ...
 
-    def list_actionable(self) -> list[Feedback]:
-        """All feedback whose verdict is not ``correct``."""
+    def list_actionable(self) -> list[tuple[int, Feedback]]:
+        """All (id, feedback) pairs whose verdict is not ``correct``."""
         ...
 
 
@@ -97,3 +99,5 @@ class EvalSetRepository(Protocol):
     def load(self) -> list[EvalItem]: ...
 
     def append(self, item: EvalItem) -> None: ...
+
+    def write(self, items: list[EvalItem]) -> None: ...
