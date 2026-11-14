@@ -148,7 +148,7 @@ def create_app(settings_factory: Callable[[], Settings] = Settings.from_env) -> 
         except UnknownQueryError:
             raise HTTPException(status.HTTP_404_NOT_FOUND, f"unknown query_id {body.query_id!r}")
         except UnknownCitationError as exc:
-            raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY,
+            raise HTTPException(422,
                                 f"correct_citations not in corpus: {exc}")
         return FeedbackResponse(feedback_id=feedback_id, query_id=body.query_id)
 
