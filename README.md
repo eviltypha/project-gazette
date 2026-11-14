@@ -138,6 +138,27 @@ are evaluated at the fixed date 2026-11-14 so the report is reproducible.
 | Groundedness | 1.0000 |
 | Refusal threshold (configured / selected by sweep) | 0.2319 / 0.2319 |
 
+### Optional: cross-encoder reranking (fourth row)
+
+`pip install -e .[rerank]`, then `GAZETTE_RERANKER=cross-encoder python -m gazette.eval --report eval/report_rerank.json`.
+This re-scores the 20 fused candidates with `cross-encoder/ms-marco-MiniLM-L-6-v2` and keeps
+the top 5. It needs a one-time model download, so it is off by default and never used by pytest.
+
+| Retriever | Recall@5 |
+|---|---|
+| BM25 only | 0.9524 |
+| Vector only | 0.9286 |
+| Hybrid (RRF) | 0.9524 |
+| **Hybrid + cross-encoder rerank** | **0.9762** |
+
+With reranking, citation precision rises from 0.5918 to 0.6170. Refusal recall (0.80), the
+false-refusal rate (0.1429) and superseded citations (0) are unchanged, because the refusal
+gate and the as-of filter run independently of the reranker. As-of accuracy drops from 0.8182
+to 0.7273: the general-purpose MS MARCO model prefers paragraphs that restate a rule, such as
+transition or "remains unchanged" paragraphs, over the amended paragraph itself. A
+domain-tuned reranker, or letting the provider follow the reranked order, is the next step
+before enabling it by default.
+
 ### How the refusal threshold is chosen
 
 The refusal gate compares the best cosine similarity of the in-force vector hits against
