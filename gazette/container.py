@@ -11,7 +11,7 @@ from gazette.application.audit import AuditedAsk
 from gazette.application.evaluation import EvaluateSystem
 from gazette.application.feedback import ApproveCandidate, ExportCandidates, SubmitFeedback
 from gazette.application.ingest import IngestCorpus, IngestReport, read_manifest
-from gazette.application.ports import Embedder, LLMProvider
+from gazette.application.ports import Embedder, LLMProvider, Reranker
 from gazette.application.retrieval import HybridRetriever
 from gazette.config import Settings
 from gazette.domain.corpus import all_paragraphs
@@ -37,6 +37,16 @@ def make_provider(settings: Settings) -> LLMProvider:
     if settings.llm_provider == "fake":
         return FakeProvider()
     raise ValueError(f"unknown GAZETTE_LLM_PROVIDER {settings.llm_provider!r}")
+
+
+def make_reranker(settings: Settings) -> Reranker | None:
+    if settings.reranker == "none":
+        return None
+    if settings.reranker == "cross-encoder":
+        from gazette.infrastructure.cross_encoder import CrossEncoderReranker
+
+        return CrossEncoderReranker()
+    raise ValueError(f"unknown GAZETTE_RERANKER {settings.reranker!r}")
 
 
 def run_ingest(settings: Settings) -> IngestReport:
@@ -80,6 +90,7 @@ def build_services(settings: Settings) -> Services:
         paragraphs=paragraphs,
         top_k=settings.top_k,
         min_similarity=settings.min_similarity,
+        reranker=make_reranker(settings),
     )
     audit = SqliteAuditRepository(settings.db_path)
     return Services(
@@ -122,5 +133,6 @@ def run_evaluation(settings: Settings, questions: Path) -> dict:
         "embedder": eval_settings.embedder,
         "top_k": eval_settings.top_k,
         "min_similarity": eval_settings.min_similarity,
+        "reranker": eval_settings.reranker,
     }
     return report

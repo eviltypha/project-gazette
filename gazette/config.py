@@ -16,6 +16,7 @@ class Settings:
     embedder: str
     top_k: int
     min_similarity: float
+    reranker: str
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -27,4 +28,5 @@ class Settings:
             embedder=os.getenv("GAZETTE_EMBEDDER", "hashed"),
             top_k=int(os.getenv("GAZETTE_TOP_K", "5")),
             min_similarity=float(os.getenv("GAZETTE_MIN_SIMILARITY", "0.2319")),
+            reranker=os.getenv("GAZETTE_RERANKER", "none"),
         )
