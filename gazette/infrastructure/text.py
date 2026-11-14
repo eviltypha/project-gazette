@@ -8,7 +8,10 @@ STOPWORDS = frozenset(
     """a an the of to in for and or on by with be is are was were been being shall should
     must may can could would will as at from that this these those which it its such any all
     under per than within into if not no so do does did what how when where who whom why
-    often much many i we our us you your their there here also other long""".split()
+    often much many i we our us you your their there here also other long
+    he him his she her they them get got gets just need needs needed want wants still
+    someone something anyone go goes going put kind make look looking back mid right
+    currently now soon told tell up about till yet already ok okay please""".split()
 )
 
 # Officers ask in acronyms; circulars spell terms out. Expanding both sides keeps
@@ -25,6 +28,9 @@ _ACRONYMS = {
     "ubo": "beneficial owner",
     "edd": "enhanced due diligence",
     "cdd": "customer due diligence",
+    "po": "principal officer",
+    "ovd": "officially valid document",
+    "dd": "designated director",
 }
 # Everyday verbs officers use for concepts the circulars name formally.
 _SYNONYMS = {

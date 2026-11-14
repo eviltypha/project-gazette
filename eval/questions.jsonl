@@ -1,0 +1,52 @@
+{"id": "q001", "question": "What do I need to take from an individual before opening their savings account?", "gold": ["GZ-KYC-2019-01#2"], "should_refuse": false}
+{"id": "q002", "question": "Which IDs qualify as OVDs? Can we take a PAN card or bank passbook as one?", "gold": ["GZ-KYC-2019-01#3"], "should_refuse": false}
+{"id": "q003", "question": "What are the caps on credits, withdrawals and balance in a small account?", "gold": ["GZ-KYC-2019-01#6"], "should_refuse": false}
+{"id": "q004", "question": "Customer with no ID papers wants an account - can we open a small account, and how?", "gold": ["GZ-KYC-2019-01#5"], "should_refuse": false}
+{"id": "q005", "question": "What kind of customers do we have to put in the high-risk bucket?", "gold": ["GZ-KYC-2019-02#3"], "should_refuse": false}
+{"id": "q006", "question": "How often is re-KYC due for medium and low risk customers?", "gold": ["GZ-KYC-2019-02#5", "GZ-KYC-2023-01#4"], "should_refuse": false}
+{"id": "q007", "question": "What's the re-KYC cycle for high-risk accounts these days?", "gold": ["GZ-KYC-2023-01#3"], "should_refuse": false}
+{"id": "q008", "question": "Who all can we onboard over V-CIP, and can a vendor's agent handle the video call?", "gold": ["GZ-KYC-2020-01#2"], "should_refuse": false}
+{"id": "q009", "question": "Customer is travelling in Dubai - can we finish his V-CIP from there?", "gold": ["GZ-KYC-2020-01#4"], "should_refuse": false}
+{"id": "q010", "question": "What should the V-CIP agent do to rule out a deepfake or a photo held up to the camera?", "gold": ["GZ-KYC-2020-01#5"], "should_refuse": false}
+{"id": "q011", "question": "Can we open a PEP's account through V-CIP, and is there a ceiling on credits till we meet them in person?", "gold": ["GZ-KYC-2023-02#3"], "should_refuse": false}
+{"id": "q012", "question": "We're onboarding someone remotely without video KYC. What safeguards apply?", "gold": ["GZ-KYC-2020-01#8"], "should_refuse": false}
+{"id": "q013", "question": "Who has to sign off before we onboard a PEP as a customer?", "gold": ["GZ-AML-2020-02#3"], "should_refuse": false}
+{"id": "q014", "question": "An existing customer just got appointed as a foreign ambassador. What do we need to do, and by when?", "gold": ["GZ-AML-2020-02#6"], "should_refuse": false}
+{"id": "q015", "question": "What shareholding makes someone the UBO of a private limited company client?", "gold": ["GZ-KYC-2021-01#2"], "should_refuse": false}
+{"id": "q016", "question": "For a partnership firm, at what profit share does a partner count as beneficial owner?", "gold": ["GZ-KYC-2021-01#3"], "should_refuse": false}
+{"id": "q017", "question": "Opening a trust account - whose details do we capture as beneficial owners?", "gold": ["GZ-KYC-2021-01#5"], "should_refuse": false}
+{"id": "q018", "question": "What is the cash amount above which we file a CTR right now?", "gold": ["GZ-AML-2021-02#3"], "should_refuse": false}
+{"id": "q019", "question": "What's the due date for submitting the monthly CTR to FIU?", "gold": ["GZ-AML-2019-01#4", "GZ-AML-2021-02#4"], "should_refuse": false}
+{"id": "q020", "question": "Once the PO decides a transaction is suspicious, how many days do we get to file the STR?", "gold": ["GZ-AML-2024-01#3"], "should_refuse": false}
+{"id": "q021", "question": "Can the branch tell a customer we've flagged him to FIU, or block his account because of the STR?", "gold": ["GZ-AML-2019-01#6"], "should_refuse": false}
+{"id": "q022", "question": "A walk-in tried to deposit cash and walked off when asked for PAN. Do we still report it?", "gold": ["GZ-AML-2019-01#7"], "should_refuse": false}
+{"id": "q023", "question": "For how long do we currently keep transaction records?", "gold": ["GZ-AML-2020-01#3"], "should_refuse": false}
+{"id": "q024", "question": "FIU has asked for an old account's records - how quickly must we hand them over?", "gold": ["GZ-AML-2020-01#5"], "should_refuse": false}
+{"id": "q025", "question": "Domestic NEFT of Rs 75,000 - what remitter details have to go with the message?", "gold": ["GZ-AML-2021-01#2"], "should_refuse": false}
+{"id": "q026", "question": "Above what amount does an outward cross-border wire need full originator details?", "gold": ["GZ-AML-2021-01#3"], "should_refuse": false}
+{"id": "q027", "question": "We got a hit against the UN sanctions list for an existing customer. How fast must the funds be frozen, and do we warn him first?", "gold": ["GZ-AML-2022-01#4"], "should_refuse": false}
+{"id": "q028", "question": "Who can be appointed as PO, and what is the minimum seniority?", "gold": ["GZ-AML-2022-02#3"], "should_refuse": false}
+{"id": "q029", "question": "Who should be our Designated Director, and how soon must FIU be told after appointment?", "gold": ["GZ-AML-2022-02#2"], "should_refuse": false}
+{"id": "q030", "question": "How often should staff go through AML training, and what about new joiners?", "gold": ["GZ-AML-2022-02#5"], "should_refuse": false}
+{"id": "q031", "question": "Do we need a yearly independent KYC/AML audit, and where do the findings go?", "gold": ["GZ-AML-2022-02#6"], "should_refuse": false}
+{"id": "a001", "question": "Back in mid-2020, what was the cash reporting threshold for CTRs?", "as_of": "2020-06-15", "gold": ["GZ-AML-2019-01#3"], "should_refuse": false}
+{"id": "a002", "question": "In January 2022, cash deals above what amount had to be reported in a CTR?", "as_of": "2022-01-10", "gold": ["GZ-AML-2021-02#3"], "should_refuse": false}
+{"id": "a003", "question": "During late 2022, how frequently were high-risk customers due for re-KYC?", "as_of": "2022-12-01", "gold": ["GZ-KYC-2019-02#4"], "should_refuse": false}
+{"id": "a004", "question": "As of May 2023, what was the re-KYC interval for high-risk customers?", "as_of": "2023-05-15", "gold": ["GZ-KYC-2023-01#3"], "should_refuse": false}
+{"id": "a005", "question": "In mid-2021, what cap applied to credits in a PEP account opened via video KYC?", "as_of": "2021-06-30", "gold": ["GZ-KYC-2020-01#6"], "should_refuse": false}
+{"id": "a006", "question": "For a PEP onboarded on V-CIP in March 2024, what was the yearly credit ceiling pending in-person verification?", "as_of": "2024-03-01", "gold": ["GZ-KYC-2023-02#3"], "should_refuse": false}
+{"id": "a007", "question": "Our PO concluded suspicion in November 2023 - how many working days did we have to file the STR?", "as_of": "2023-11-20", "gold": ["GZ-AML-2019-01#5"], "should_refuse": false}
+{"id": "a008", "question": "Suspicion was concluded on 1 Feb 2024. What's the STR filing window?", "as_of": "2024-02-01", "gold": ["GZ-AML-2024-01#3"], "should_refuse": false}
+{"id": "a009", "question": "By June 2027, how many years must transaction records be kept?", "as_of": "2027-06-01", "gold": ["GZ-AML-2026-01#3"], "should_refuse": false}
+{"id": "a010", "question": "In August 2025, how long after an account was closed did we have to keep the customer's KYC papers?", "as_of": "2025-08-01", "gold": ["GZ-AML-2020-01#4"], "should_refuse": false}
+{"id": "a011", "question": "Looking at mid-2027, how long will identification records need to be retained once the relationship ends?", "as_of": "2027-06-01", "gold": ["GZ-AML-2026-01#4"], "should_refuse": false}
+{"id": "r001", "question": "Do we need a FATCA/CRS self-certification when opening an NRI account, and when is the annual reporting due?", "gold": [], "should_refuse": true}
+{"id": "r002", "question": "A customer's credits are coming from a crypto exchange. Is there specific KYC guidance for virtual digital asset providers?", "gold": [], "should_refuse": true}
+{"id": "r003", "question": "What due diligence is needed before opening a vostro account for a foreign respondent bank, and are nested relationships allowed?", "gold": [], "should_refuse": true}
+{"id": "r004", "question": "What red flags in import invoices should we watch for to catch trade-based money laundering?", "gold": [], "should_refuse": true}
+{"id": "r005", "question": "For gold loans, which KYC documents are mandatory and is there an amount above which PAN is needed?", "gold": [], "should_refuse": true}
+{"id": "r006", "question": "We sell mutual funds and insurance at the branch. Does our bank KYC cover the AMC/insurer, or is a separate KRA check needed?", "gold": [], "should_refuse": true}
+{"id": "r007", "question": "Aadhaar fingerprint authentication keeps failing for an elderly customer. What's the fallback for e-KYC?", "gold": [], "should_refuse": true}
+{"id": "r008", "question": "What is the monetary penalty if a bank misses the CTR deadline?", "gold": [], "should_refuse": true}
+{"id": "r009", "question": "The holder of a minor account just turned 18. What fresh KYC is needed, and can the account keep running meanwhile?", "gold": [], "should_refuse": true}
+{"id": "r010", "question": "Within how many days must KYC records be uploaded to CKYCR after the account is opened?", "gold": [], "should_refuse": true}

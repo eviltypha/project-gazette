@@ -23,6 +23,8 @@ _FIGURE = re.compile(r"(?i)\bRs\.?\s*\d|\b\d+\s*(?:per\s*cent|%|lakh|crore|worki
 _CALENDAR = re.compile(
     r"\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\b"
 )
+# Preamble and amendment lead-in paragraphs point at other circulars instead of stating a rule.
+_PREAMBLE = re.compile(r"^Reference is invited\b|\bstands substituted\b")
 
 
 class FakeProvider:
@@ -33,6 +35,8 @@ class FakeProvider:
         terms = set(tokenize(question))
         candidates = []
         for rank, paragraph in enumerate(context):
+            if _PREAMBLE.search(paragraph.text):
+                continue
             sentence, score = _best_sentence(paragraph.text, terms)
             if score > 0:
                 candidates.append((-score, rank, paragraph, sentence))
