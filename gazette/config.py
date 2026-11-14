@@ -15,6 +15,7 @@ class Settings:
     llm_provider: str
     embedder: str
     top_k: int
+    min_similarity: float
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -25,4 +26,5 @@ class Settings:
             llm_provider=os.getenv("GAZETTE_LLM_PROVIDER", "fake"),
             embedder=os.getenv("GAZETTE_EMBEDDER", "hashed"),
             top_k=int(os.getenv("GAZETTE_TOP_K", "5")),
+            min_similarity=float(os.getenv("GAZETTE_MIN_SIMILARITY", "0.15")),
         )
