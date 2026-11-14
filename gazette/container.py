@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import tempfile
+from dataclasses import dataclass, replace
+from pathlib import Path
 
 from gazette.application.ask import AskQuestion
+from gazette.application.evaluation import EvaluateSystem
 from gazette.application.ingest import IngestCorpus, IngestReport, read_manifest
 from gazette.application.ports import Embedder, LLMProvider
 from gazette.application.retrieval import HybridRetriever
@@ -16,6 +19,8 @@ from gazette.infrastructure.bm25_index import BM25Index
 from gazette.infrastructure.embedders import HashedTfidfEmbedder
 from gazette.infrastructure.fake_provider import FakeProvider
 from gazette.infrastructure.json_corpus import JsonCorpusSource
+from gazette.infrastructure.jsonl_eval_set import JsonlEvalSet
+from gazette.infrastructure.overlap_judge import OverlapJudge
 from gazette.infrastructure.vector_index import NumpyVectorIndex
 
 
@@ -69,3 +74,22 @@ def build_services(settings: Settings) -> Services:
         min_similarity=settings.min_similarity,
     )
     return Services(settings, circulars, calendar, ask)
+
+
+def run_evaluation(settings: Settings, questions: Path) -> dict:
+    """Evaluate with the FakeProvider against a fresh index built in a temp directory,
+    so the report depends only on the committed corpus, eval set and code."""
+    with tempfile.TemporaryDirectory() as tmp:
+        eval_settings = replace(settings, index_dir=Path(tmp) / "index", llm_provider="fake")
+        run_ingest(eval_settings)
+        services = build_services(eval_settings)
+        evaluator = EvaluateSystem(services.ask, services.calendar, OverlapJudge())
+        report = evaluator.run(JsonlEvalSet(questions).load())
+    report["config"] = {
+        "provider": services.ask.provider.name,
+        "prompt_version": services.ask.provider.prompt_version,
+        "embedder": eval_settings.embedder,
+        "top_k": eval_settings.top_k,
+        "min_similarity": eval_settings.min_similarity,
+    }
+    return report
