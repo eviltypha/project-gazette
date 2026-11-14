@@ -86,6 +86,34 @@ def test_off_topic_question_is_refused(module_client, question):
     assert body["refusal_reason"]
 
 
+KNOWN_QUESTIONS = [
+    ("What is the cash transaction reporting threshold?", "2025-01-01", "GZ-AML-2021-02#3"),
+    ("What was the CTR threshold?", "2020-06-01", "GZ-AML-2019-01#3"),
+    ("Within how many days must an STR be filed?", "2025-01-01", "GZ-AML-2024-01#3"),
+    ("Within how many days must an STR be filed?", "2023-06-01", "GZ-AML-2019-01#5"),
+    ("How often must a high-risk customer be re-KYC'd?", "2025-01-01", "GZ-KYC-2023-01#3"),
+    ("What is the beneficial ownership threshold for a company?", "2025-01-01", "GZ-KYC-2021-01#2"),
+]
+
+
+@pytest.mark.parametrize(("question", "as_of", "expected"), KNOWN_QUESTIONS)
+def test_known_question_cites_expected_paragraph(module_client, question, as_of, expected):
+    body = module_client.post("/ask", json={"question": question, "as_of": as_of}).json()
+
+    assert body["status"] == "answered"
+    assert expected in {f"{c['circular_id']}#{c['para']}" for c in body["citations"]}
+
+
+def test_every_returned_citation_is_retrieved_and_verbatim(module_client):
+    paragraphs = {p.chunk_id: p.text for p in all_paragraphs(JsonCorpusSource(CORPUS_DIR).load())}
+    for question, as_of, _ in KNOWN_QUESTIONS:
+        body = module_client.post("/ask", json={"question": question, "as_of": as_of}).json()
+        for citation in body["citations"]:
+            chunk_id = f"{citation['circular_id']}#{citation['para']}"
+            assert chunk_id in body["retrieved"]
+            assert citation["quote"] in paragraphs[chunk_id]
+
+
 def test_invalid_payload_is_rejected(client):
     assert client.post("/ask", json={"question": ""}).status_code == 422
     assert client.post("/ask", json={"question": "ok?", "as_of": "not-a-date"}).status_code == 422
