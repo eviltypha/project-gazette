@@ -1,0 +1,87 @@
+"""Ports: abstract interfaces implemented by infrastructure adapters."""
+
+from __future__ import annotations
+
+from collections.abc import Collection, Sequence
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Protocol
+
+import numpy as np
+
+from gazette.domain.models import (
+    AuditRecord,
+    Circular,
+    Citation,
+    EvalItem,
+    Feedback,
+    Paragraph,
+    ScoredChunk,
+)
+
+
+class CorpusSource(Protocol):
+    def load(self) -> list[Circular]: ...
+
+
+class Embedder(Protocol):
+    name: str
+
+    def embed(self, texts: Sequence[str]) -> np.ndarray:
+        """Return an (n, d) matrix of L2-normalised vectors."""
+        ...
+
+
+class SearchIndex(Protocol):
+    """A single retriever (keyword or vector) over paragraph chunks."""
+
+    def build(self, paragraphs: Sequence[Paragraph]) -> None: ...
+
+    def save(self, directory: Path) -> None: ...
+
+    def load(self, directory: Path) -> None: ...
+
+    def search(
+        self, query: str, k: int, allowed_ids: Collection[str] | None = None
+    ) -> list[ScoredChunk]: ...
+
+
+@dataclass(frozen=True)
+class Draft:
+    """Unvalidated model output; citations are checked by the pipeline."""
+
+    answer: str
+    citations: tuple[Citation, ...]
+
+
+class LLMProvider(Protocol):
+    name: str
+    prompt_version: str
+
+    def generate(self, question: str, context: Sequence[Paragraph]) -> Draft: ...
+
+
+class Judge(Protocol):
+    def groundedness(self, answer: str, citations: Sequence[Citation]) -> float:
+        """Return a score in [0, 1]."""
+        ...
+
+
+class AuditRepository(Protocol):
+    def record(self, entry: AuditRecord) -> None: ...
+
+    def get(self, query_id: str) -> AuditRecord | None: ...
+
+
+class FeedbackRepository(Protocol):
+    def add(self, feedback: Feedback) -> None: ...
+
+    def list_actionable(self) -> list[Feedback]:
+        """All feedback whose verdict is not ``correct``."""
+        ...
+
+
+class EvalSetRepository(Protocol):
+    def load(self) -> list[EvalItem]: ...
+
+    def append(self, item: EvalItem) -> None: ...
